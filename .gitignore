@@ -1,0 +1,5 @@
+*.sw
+*.sw*
+node_modules
+site_packeges
+bower_components
