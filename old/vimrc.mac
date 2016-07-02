@@ -2,9 +2,10 @@ set nocompatible
 filetype off
 set t_Co=256
 
+
 set splitbelow
 set splitright
-
+        
 set wildmenu
 
 set encoding=utf-8
@@ -298,4 +299,9 @@ noremap <silent> ,cu :<C-B>silent <C-E>s/^\V<C-R>=escape(b:comment_leader,'\/')<
 
 
 
+set autoindent
+set cindent
+inoremap { {<CR>}<up><end><CR>
 
+
+" autocmd BufWritePost *.py call Flake8()
