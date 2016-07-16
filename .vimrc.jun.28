@@ -2,12 +2,19 @@ set nocompatible
 filetype off
 set t_Co=256
 
+set noswapfile
 set splitbelow
 set splitright
 
 set wildmenu
 
 set encoding=utf-8
+set foldmethod=syntax
+
+"set foldlevelstart=1
+set list listchars=tab:»·,trail:·,extends:#
+
+"let javaScript_fold=1         " JavaScript
 
 " map leader
 let mapleader=","
@@ -58,6 +65,7 @@ set wildignore=*.o,*~,&.pyc
 
 set viminfo+=! " make sure vim history works
 
+runtime macros/matchit.vim
 
 
 " set the runtime path to include Vundle and initialize
