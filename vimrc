@@ -1,7 +1,12 @@
 set nocompatible
+set noswapfile
 filetype off
 set t_Co=256
 
+" highlight all occurence of a selected word
+set hlsearch
+
+" set split direction
 set splitbelow
 set splitright
 
@@ -15,27 +20,17 @@ let mapleader=","
 " backspcae fix
 set backspace=indent,eol,start
 
-
 " enable syntax highlighting 
 syntax enable
 
-
 " show line number
 set number
-
-
 
 " show a visual line under the cursor's current line
 set cursorline 
 
 " show the matching part of the pair for [] {} and ()
 set showmatch
-
-" set split direction
-
-set splitbelow
-set splitright
-
 
 " enable all Python syntax highlighting features 
 let python_highlight_all = 1
@@ -77,13 +72,18 @@ Plugin 'jistr/vim-nerdtree-tabs'
 Plugin 'tmhedberg/SimpylFold'
 Plugin 'godlygeek/tabular'
 " Plugin 'python-rope/ropevim'
+Plugin 'majutsushi/tagbar'
 Plugin 'tpope/vim-fugitive'
 Plugin 'vim-airline/vim-airline'
 "Plugin 'myusuf3/numbers.vim'
-" Plugin 'scrooloose/syntastic'
+Plugin 'scrooloose/syntastic'
 " Plugin 'ternjs/tern_for_vim'
 " Plugin 'matze/vim-move'
 Plugin 'nvie/vim-flake8'
+Plugin 'lepture/vim-jinja'
+
+" JSX Plugin
+Plugin 'mxw/vim-jsx'
 
 ""Vim Python
 Plugin 'vim-scripts/indentpython.vim'
@@ -127,9 +127,8 @@ map <leader>g  :YcmCompleter GoToDefinitionElseDeclaration<CR>
 " This does what it says on the tin. It will check your file on open too, not just on save.
 " You might not want this, so just leave it out if you don't.
 
-let g:syntastic_check_on_open=1
 
-" colo predawn
+" colo monokai 
 
 vmap <C-x> :!pbcopy<CR>  
 vmap <C-c> :w !pbcopy<CR><CR> 
@@ -152,7 +151,7 @@ nnoremap '; :
 noremap <leader><Tab> <Esc>
 
 nnoremap ;' :CtrlPTag<CR>
-nnoremap <silent> <Leader>b :TagbarToogle<CR>
+nnoremap <silent> <Leader>b :TagbarToggle<CR>
 
 " Set Space to Fold/Unfold
 nnoremap <space> za
@@ -264,4 +263,35 @@ endif
 " rope config
 " let ropevim_vim_completion=1
 " let ropevim_extended_complete=1
+" let g:airline#extensions#tabline#enabled = 1
+
+" Commenting blocks of code.
+autocmd FileType c,cpp,java,javascript,scala let b:comment_leader = '// '
+autocmd FileType sh,ruby,python   let b:comment_leader = '# '
+autocmd FileType conf,fstab       let b:comment_leader = '# '
+autocmd FileType tex              let b:comment_leader = '% '
+autocmd FileType mail             let b:comment_leader = '> '
+autocmd FileType vim              let b:comment_leader = '" '
+noremap <silent> ,cc :<C-B>silent <C-E>s/^/<C-R>=escape(b:comment_leader,'\/')<CR>/<CR>:nohlsearch<CR>
+noremap <silent> ,cu :<C-B>silent <C-E>s/^\V<C-R>=escape(b:comment_leader,'\/')<CR>//e<CR>:nohlsearch<CR>
+
+
+au BufNewFile,BufRead *.html,*.htm,*.shtml,*.stm set ft=jinja
+
+
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+ 
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+
+let g:syntastic_javascript_checkers = ['eslint']
+ 
+" copy to clipboard
+nnoremap ,y "*y
+
+
 
