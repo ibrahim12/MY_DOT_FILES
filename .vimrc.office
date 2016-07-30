@@ -1,8 +1,12 @@
 set nocompatible
+set noswapfile
 filetype off
 set t_Co=256
-
 set noswapfile
+" highlight all occurence of a selected word
+set hlsearch
+
+" set split direction
 set splitbelow
 set splitright
 
@@ -26,7 +30,6 @@ set backspace=indent,eol,start
 
 " enable syntax highlighting
 syntax enable
-
 
 " show line number
 set number
@@ -79,6 +82,7 @@ Plugin 'jistr/vim-nerdtree-tabs'
 Plugin 'tmhedberg/SimpylFold'
 Plugin 'godlygeek/tabular'
 " Plugin 'python-rope/ropevim'
+Plugin 'majutsushi/tagbar'
 Plugin 'tpope/vim-fugitive'
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
@@ -89,6 +93,10 @@ Plugin 'scrooloose/syntastic'
 Plugin 'nvie/vim-flake8'
 Plugin 'maksimr/vim-jsbeautify'
 Plugin 'tpope/vim-unimpaired'
+Plugin 'lepture/vim-jinja'
+
+" JSX Plugin
+Plugin 'mxw/vim-jsx'
 
 ""Vim Python
 Plugin 'vim-scripts/indentpython.vim'
@@ -166,6 +174,7 @@ nnoremap ] :lprev<cr>
 nnoremap '; :
 noremap <leader><Tab> <Esc>
 
+nnoremap ;' :CtrlPTag<CR>
 nnoremap <silent> <Leader>b :TagbarToggle<CR>
 
 " Set Space to Fold/Unfold
@@ -287,6 +296,37 @@ endif
 " rope config
 " let ropevim_vim_completion=1
 " let ropevim_extended_complete=1
+" let g:airline#extensions#tabline#enabled = 1
+
+" Commenting blocks of code.
+autocmd FileType c,cpp,java,javascript,scala let b:comment_leader = '// '
+autocmd FileType sh,ruby,python   let b:comment_leader = '# '
+autocmd FileType conf,fstab       let b:comment_leader = '# '
+autocmd FileType tex              let b:comment_leader = '% '
+autocmd FileType mail             let b:comment_leader = '> '
+autocmd FileType vim              let b:comment_leader = '" '
+noremap <silent> ,cc :<C-B>silent <C-E>s/^/<C-R>=escape(b:comment_leader,'\/')<CR>/<CR>:nohlsearch<CR>
+noremap <silent> ,cu :<C-B>silent <C-E>s/^\V<C-R>=escape(b:comment_leader,'\/')<CR>//e<CR>:nohlsearch<CR>
+
+
+au BufNewFile,BufRead *.html,*.htm,*.shtml,*.stm set ft=jinja
+
+
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+ 
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+
+let g:syntastic_javascript_checkers = ['eslint']
+ 
+" copy to clipboard
+nnoremap ,y "*y
+
+
 
 
 function! s:ExecuteInShell(command)
