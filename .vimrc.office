@@ -2,13 +2,21 @@ set nocompatible
 filetype off
 set t_Co=256
 
+set noswapfile
 set splitbelow
 set splitright
+
+set diffopt+=vertical
 
 set wildmenu
 
 set encoding=utf-8
+set foldmethod=syntax
 
+"set foldlevelstart=1
+set list listchars=tab:»·,trail:·,extends:#
+
+"let javaScript_fold=1         " JavaScript
 " map leader
 let mapleader=","
 
@@ -16,31 +24,24 @@ let mapleader=","
 set backspace=indent,eol,start
 
 
-" enable syntax highlighting 
+" enable syntax highlighting
 syntax enable
 
 
 " show line number
 set number
 
-
-
 " show a visual line under the cursor's current line
-set cursorline 
+set cursorline
 
 " show the matching part of the pair for [] {} and ()
 set showmatch
 
-" set split direction
 
-set splitbelow
-set splitright
-
-
-" enable all Python syntax highlighting features 
+" enable all Python syntax highlighting features
 let python_highlight_all = 1
 
-" remember more commands and serach history 
+" remember more commands and serach history
 set history=1000
 
 " use many muchos levels of undo
@@ -49,7 +50,7 @@ set undolevels=1000
 " enable mouse
 set mouse=a
 
-"set to auto read when a file is changed from the outside 
+"set to auto read when a file is changed from the outside
 set autoread
 
 
@@ -58,19 +59,20 @@ set wildignore=*.o,*~,&.pyc
 
 set viminfo+=! " make sure vim history works
 
-
+runtime macros/matchit.vim
 
 " set the runtime path to include Vundle and initialize
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 
-""Vim Basic 
+""Vim Basic
 Plugin 'nathanaelkane/vim-indent-guides'
 " Plugin 'Raimondi/delimitMate'
 Plugin 'flazz/vim-colorschemes'
+Plugin 'sickill/vim-monokai'
 Plugin 'Valloric/YouCompleteMe'
 Plugin 'kien/ctrlp.vim'
-
+Plugin 'majutsushi/tagbar'
 Plugin 'scrooloose/nerdtree'
 Plugin 'Xuyuanp/nerdtree-git-plugin'
 Plugin 'jistr/vim-nerdtree-tabs'
@@ -79,23 +81,28 @@ Plugin 'godlygeek/tabular'
 " Plugin 'python-rope/ropevim'
 Plugin 'tpope/vim-fugitive'
 Plugin 'vim-airline/vim-airline'
+Plugin 'vim-airline/vim-airline-themes'
 "Plugin 'myusuf3/numbers.vim'
-" Plugin 'scrooloose/syntastic'
+Plugin 'scrooloose/syntastic'
 " Plugin 'ternjs/tern_for_vim'
 " Plugin 'matze/vim-move'
 Plugin 'nvie/vim-flake8'
+Plugin 'maksimr/vim-jsbeautify'
+Plugin 'tpope/vim-unimpaired'
 
 ""Vim Python
 Plugin 'vim-scripts/indentpython.vim'
 
 
-""Vim Javascript 
-"Plugin 'jelera/vim-javascript-syntax'
-"Plugin 'pangloss/vim-javascript'
-"Plugin 'bigfish/vim-js-context-coloring'
-"Plugin 'othree/jspc.vim'
-"Plugin 'maksimr/vim-jsbeautify'
-"Plugin 'matthewsimo/angular-vim-snippets'
+
+""Vim Javascript
+Plugin 'jelera/vim-javascript-syntax'
+Plugin 'pangloss/vim-javascript'
+Plugin 'bigfish/vim-js-context-coloring'
+Plugin 'othree/jspc.vim'
+Plugin 'matthewsimo/angular-vim-snippets'
+Plugin 'ruanyl/vim-fixmyjs'
+
 "
 call vundle#end()
 
@@ -112,6 +119,11 @@ let NERDTreeIgnore = ['\.pyc$']
 map <leader>n <plug>NERDTreeTabsToggle<CR>
 
 
+" vim airline
+let g:javascript_enable_domhtmlcss = 1
+let g:airline#extensions#tabline#enabled = 1
+set laststatus=2
+
 
 " These are the tweaks I apply to YCM's config, you don't need them but they might help.
 " YCM gives you popups and splits by default that some people might not like, so these should tidy it up a bit for you.
@@ -127,15 +139,18 @@ map <leader>g  :YcmCompleter GoToDefinitionElseDeclaration<CR>
 " This does what it says on the tin. It will check your file on open too, not just on save.
 " You might not want this, so just leave it out if you don't.
 
-let g:syntastic_check_on_open=1
 
 " colo predawn
+colo monokai
 
-vmap <C-x> :!pbcopy<CR>  
-vmap <C-c> :w !pbcopy<CR><CR> 
+vmap <C-x> :!pbcopy<CR>
+vmap <C-c> :w !pbcopy<CR><CR>
 
 nnoremap <leader>W :w !sudo tee % > /dev/null<CR>
 nnoremap <leader>w :w<cr>
+nnoremap rr :e %<cr>
+nnoremap [ :lnext<cr>
+nnoremap ] :lprev<cr>
 " Centering the cursor
 "nnoremap <Leader>zz :let &scrolloff=999-&scrolloff<CR>
 "nnoremap j jzz
@@ -151,18 +166,20 @@ nnoremap <leader>w :w<cr>
 nnoremap '; :
 noremap <leader><Tab> <Esc>
 
-nnoremap ;' :CtrlPTag<CR>
-nnoremap <silent> <Leader>b :TagbarToogle<CR>
+nnoremap <silent> <Leader>b :TagbarToggle<CR>
 
 " Set Space to Fold/Unfold
 nnoremap <space> za
 " ; to cntrpBuffer
-noremap <leader>; :CtrlPBuffer<CR>
 
+let g:ctrlp_map = ';;'
+nnoremap ;' :CtrlPMRU<CR>
+noremap <leader>; :CtrlPBuffer<CR>
+noremap <leader>' :CtrlPTag<CR>
 
 map <C-J> <C-W>j<C-W>_ " open and maximize the split below
 map <C-K> <C-W>k<C-W>_ " open and maximize the split above
-set wmh=0 " reduces splits to a single line 
+set wmh=0 " reduces splits to a single line
 
 map  <C-l> :tabn<CR>
 map  <C-h> :tabp<CR>
@@ -178,11 +195,17 @@ nnoremap vrc :tabnew ~/.vimrc<cr>
 nnoremap rvrc :so ~/.vimrc<cr>
 
 
-let g:ctrlp_map = ';;'
 nnoremap <S-H> :vertical resize -5<cr>
 "nnoremap <S-K> :resize +5<cr>
 "nnoremap <S-J> :resize -5<cr>
 nnoremap <S-L> :vertical resize +5<cr>
+
+
+nnoremap <F9> :%s/"\(.*\)"/'\1'/g<cr>
+nnoremap <F8> :s/\['\(.*\)'\]/\.\1/g<cr>
+nnoremap <F5> :%s/\s\+$//<cr>
+
+
 " Automatic commands
 if has("autocmd")
         " Enable file type detection
@@ -191,7 +214,7 @@ if has("autocmd")
 	autocmd BufNewFile,BufRead *.json setfiletype json syntax=javascript
 endif
 
-" Enable folding 
+" Enable folding
 
 set foldmethod=indent
 set foldlevel=99
@@ -212,7 +235,7 @@ set expandtab
 "	\ set shiftwidth=4
 "	\ set textwidth=79
 "	\ set expandtab
-"	
+"
 "	\ set fileformat=unix
 
 
@@ -220,8 +243,8 @@ set expandtab
 "	\ set tabstop=2
 "	\ set softtabstop=2
 "	\ set shiftwidth=2
-"	
-" Flat for Unnecessary White space 
+"
+" Flat for Unnecessary White space
 
 " au BufRead,BufNewFile *.py,*.pyw,*.c,*.h match BadWhitespace /\s\+$/
 
@@ -240,10 +263,10 @@ set wildignore+=*/tmp/*,*.so,*.swp,*.zip     " MacOSX/Linux
 
 
 let g:ctrlp_custom_ignore = {
-  \ 'dir':  '\v[\/]\.(git|hg|svn)$|node_modules|bower_components|vendors|env|static\/build|static\/bower', 
-	\ 'file': '\v\.(exe|so|dll|pyc)$', 
-	\ 'link': 'some_bad_symbolic_links', 
-	\ } 
+  \ 'dir':  '\v[\/]\.(git|hg|svn)$|node_modules|bower_components|vendors|env|static\/build|static\/bower|js',
+	\ 'file': '\v\.(exe|so|dll|pyc)$',
+	\ 'link': 'some_bad_symbolic_links',
+	\ }
 
 " Make it uncomment when Needed to clear cache so often
 function! SetupCtrlP()
@@ -264,4 +287,81 @@ endif
 " rope config
 " let ropevim_vim_completion=1
 " let ropevim_extended_complete=1
+
+
+function! s:ExecuteInShell(command)
+  let command = join(map(split(a:command), 'expand(v:val)'))
+  let winnr = bufwinnr('^' . command . '$')
+  silent! execute  winnr < 0 ? 'botright new ' . fnameescape(command) : winnr . 'wincmd w'
+  setlocal buftype=nowrite bufhidden=wipe nobuflisted noswapfile nowrap number
+  echo 'Execute ' . command . '...'
+  silent! execute 'silent %!'. command
+  silent! execute 'resize ' . line('$')
+  silent! redraw
+  silent! execute 'au BufUnload <buffer> execute bufwinnr(' . bufnr('#') . ') . ''wincmd w'''
+  silent! execute 'nnoremap <silent> <buffer> <LocalLeader>r :call <SID>ExecuteInShell(''' . command . ''')<CR>'
+  echo 'Shell command ' . command . ' executed.'
+endfunction
+command! -complete=shellcmd -nargs=+ Shell call s:ExecuteInShell(<q-args>)
+
+nnoremap sp :Shell python %<cr>
+
+
+
+" Commenting blocks of code.
+autocmd FileType c,cpp,java,scala,javascript let b:comment_leader = '// '
+autocmd FileType sh,ruby,python   let b:comment_leader = '# '
+autocmd FileType conf,fstab       let b:comment_leader = '# '
+autocmd FileType tex              let b:comment_leader = '% '
+autocmd FileType mail             let b:comment_leader = '> '
+autocmd FileType vim              let b:comment_leader = '" '
+autocmd FileType html             let b:comment_leader = '<!--'
+
+noremap <silent> ,cc :<C-B>silent <C-E>s/^/<C-R>=escape(b:comment_leader,'\/')<CR>/<CR>:nohlsearch<CR>
+noremap <silent> ,cu :<C-B>silent <C-E>s/^\V<C-R>=escape(b:comment_leader,'\/')<CR>//e<CR>:nohlsearch<CR>
+
+
+
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+let g:syntastic_javascript_checkers = ['eslint']
+
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+
+
+" vim js beautify
+
+map <leader>g :call JsBeautify()<cr>
+"
+"autocmd FileType javascript noremap <buffer>  <leader-f> :call JsBeautify()<cr>
+"" autocmd FileType json noremap <buffer> <c-f> :call JsonBeautify()<cr>
+"" autocmd FileType jsx noremap <buffer> <c-f> :call JsxBeautify()<cr>
+"autocmd FileType html noremap <buffer> <leader-f> :call HtmlBeautify()<cr>
+"" autocmd FileType css noremap <buffer> <c-f> :call CSSBeautify()<cr>
+""
+"autocmd FileType javascript vnoremap <buffer>  <leader-f> :call RangeJsBeautify()<cr>
+"autocmd FileType json vnoremap <buffer> <leader-f> :call RangeJsonBeautify()<cr>
+"autocmd FileType jsx vnoremap <buffer> <leader-f> :call RangeJsxBeautify()<cr>
+"autocmd FileType html vnoremap <buffer> <leader-f> :call RangeHtmlBeautify()<cr>
+"autocmd FileType css vnoremap <buffer> <leader-f> :call RangeCSSBeautify()<cr>
+
+func! DeleteTrailingWS()
+  exe "normal mz"
+  %s/\s\+$//ge
+  exe "normal `z"
+endfunc
+
+autocmd BufWrite *.py :call DeleteTrailingWS()
+
+
+let g:fixmyjs_rc_path = '$HOME/work/ringIDWeb/.eslintrc.json'
+
+noremap <leader>f :Fixmyjs<CR>
+
+" autocmd FileType javascript noremap <buffer>  <leader-f> :call Fixmyjs()<cr>
 
