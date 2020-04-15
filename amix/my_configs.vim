@@ -22,30 +22,28 @@ autocmd FileType python     setlocal shiftwidth=4 softtabstop=4 expandtab smartt
 set spelllang=en_us
 nmap <silent> <leader>s :set spell!<CR>
 
-set clipboard=unnamed
+set clipboard=unnamedplus
 
 
 set foldmethod=indent
 set foldlevel=1
 set foldclose=all
 
-" let g:syntastic_python_checkers = ['pylint']
-" let g:syntastic_python_pylint_args = '--rcfile=config/pylint.rc' 
-" let g:syntastic_check_on_open = 0
-" let g:syntastic_check_on_wq = 1
-
-let b:ale_linters = ['pylint']
-let g:ale_python_pylint_options = '--rcfile=config/pylint.rc'
+let g:ale_linters = {'python': ['pylint']}
+let g:ale_open_list = 1 
+let g:ale_python_pylint_options = '--rcfile=.pylint.rc'
+let g:ale_echo_cursor = 0
 
 let g:ale_list_window_size = 5
 
-let g:ale_fixers = {
-\  'javascript': ['eslint'],
-\  'python': ['black'],
-\}
-
+"let g:ale_fixers = {
+"\  'javascript': ['eslint'],
+"\  'python': ['black'],
+"\}
 
 let g:ale_sign_error = '✘'
 let g:ale_sign_warning = '⚠'
 highlight ALEErrorSign ctermbg=NONE ctermfg=red
 highlight ALEWarningSign ctermbg=NONE ctermfg=yellow
+
+let g:enable_spelunker_vim = 1
